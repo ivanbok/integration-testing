@@ -1,0 +1,39 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+    {% if not is_provider %}
+        <div>Sorry, you do not have permission to view this page.</div>
+    {% else %}
+    <h2>List Product</h2>
+        <form action="{% url 'addlisting' %}" method="post">
+            {% csrf_token %}
+            Title: <input type="text" name="title"/><br><br>
+            Points:   <input type="number" name="price" min="0" max="1000000" step="1"><br><br>
+            Image URL: <input type="url" name="imageurl"><br><br>
+            Description: <textarea name="description" style="width:100%; height: 70px;" maxlength="1000"></textarea><br><br>
+            Tags (separate with a comma): <input type="text" name="tags"/><br><br>
+        
+            Category: 
+            <select name="category">
+                <option value="" selected disabled hidden>Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            Type:
+            <label>
+                Service
+                <input type="radio" value="service" name="producttype" checked>
+              </label>
+              <label>
+                Product
+                <input type="radio" value="product" name="producttype">
+              </label>
+            <br><br>
+            <input type="submit">
+        </form>
+    {% endif %}
+
+{% endblock %}

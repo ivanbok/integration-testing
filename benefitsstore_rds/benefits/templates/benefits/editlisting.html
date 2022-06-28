@@ -1,0 +1,25 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+    <h2>Edit Listing: <b>{{ title }}</b></h2>
+        <form action="{% url 'editlisting' id %}" method="post">
+            {% csrf_token %}
+            Title: <input type="text" name="title" value="{{ title }}"><br><br>
+            Points:   <input type="number" name="price" min="0" max="1000000" step="1" value="{{ price }}"><br><br>
+            Image URL: <input type="url" name="imageurl" value="{{ imageurl }}"><br><br>
+            Description: <textarea name="description" style="width:100%; height: 70px;" maxlength="1000">{{ description }}</textarea><br><br>
+            Tags (separate with a comma): <input type="text" value="{{ tags }}" name="tags"><br><br>
+        
+            Category: 
+            <select name="category">
+                <option value="" selected disabled hidden>Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% ifequal category selected_category%} selected {% endifequal %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+            
+            <div style="text-align: center;"><input class="btn btn-primary" type="submit" value="Save"></div>
+        </form>
+
+{% endblock %}

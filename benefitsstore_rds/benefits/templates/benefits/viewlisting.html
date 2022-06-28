@@ -1,0 +1,44 @@
+{% extends "benefits/layout.html" %}
+
+{% block class %}
+<style>
+    .tags {
+        display: inline-block;
+        border: 1px black;
+        padding: 2px;
+        background: #256bdb;
+        font-family: sans-serif;
+        color: white;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+    <h2><b>{{title}}</b></h2>
+    <hr>
+    <div style="text-align: center;"><img src="{{ imageurl }}" style="width: 50%;" alt="{{title}}"></div>
+    <hr>
+    <div><b>Description: </b>{{description}}</div>
+    <br>
+    <div><b>Listed by:</b> {{provider_company_name}}</div>
+    <hr>
+    <div style="text-align: center; font-size: 20px"><b>Points Required: </b>{{ price }}</div>
+    {% if is_employee %}
+    <div style="text-align: center">
+        <form action="{% url 'viewlisting' id %}" method="post">
+            {% csrf_token %}
+            <input class="btn btn-primary" type="submit" value="Add to Cart">
+        </form>
+    </div>
+    {% endif %}
+    <hr>
+    <div><b>Tags:</b>
+    {% for tag in tags %}
+    <span class="tags">{{tag}}</span>
+    {% endfor %}
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "benefits/layout.html" %}
+
+{% load static %}
+
+{% block class %}
+<link href="{% static 'benefits/bannerstore.css' %}" rel="stylesheet">
+<style>
+    .storeheader {
+        text-align: center;
+        font-family: sans-serif;
+        color: white;
+        font-weight: 500;
+        background-color: #0352fc;
+        padding-top: 20px;
+        padding-bottom: 5px;
+        box-shadow: inset 0 0 20px #b0c9ff;
+    }
+
+    #container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #container > div {
+        border-width: 1px;
+        border-color: darkblue;
+        background-color: aliceblue;
+        padding: 10px;
+        margin: 10px;
+        width: 200px;
+        height: 250px;
+        box-shadow: 0 0 10px gray;
+    }
+
+    .listing {
+        text-align: center;
+        font-size: 18px
+    }
+
+    .listingtitle, .listingtitle:link, .listingtitle:visited {
+        color: black;
+        font-size: 18px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="hero-image-store">
+    <div class="hero-text-store">
+      <h2>Browse Products</h2>
+    </div>
+</div>
+
+<!--<div class="storeheader"><h2>Browse Products</h2></div>-->
+<br>
+<form action="{% url 'store' %}" method="POST" style="text-align: center">
+    <b>Filter by category: </b>
+    {% csrf_token %}
+    <select name="category">
+        <option value="all">View all</option>
+        {% for category in categories %}
+            <option value="{{ category }}" {% ifequal category selected %} selected {% endifequal %}>{{ category }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Filter" class="btn btn-primary">
+</form>
+<hr>
+
+<div id="container">
+    {% for benefit in benefitsList %}
+    <div class="listing">
+        <a href="/viewlisting/{{ benefit.id }}">
+            <div style="width: 180px; height: 100px; text-align: center;">
+                <img src="{{ benefit.imageurl }}" style="max-width: 180px; max-height: 100px; vertical-align: middle;" alt="{{ benefit.title }}">
+            </div>
+            <div><b class="listingtitle">{{ benefit.title }}</b></div>
+        </a>
+        <span style="color: darkgreen; font-size: 16px; ">{{ benefit.price }} points</span>
+        <div style="font-size: 12px; padding-left: 10px; text-align: left;">Category: <b>{{ benefit.category }}</b></div>
+        <div style="font-size: 12px; padding-left: 10px; text-align: left;">Offered by: <b>{{ benefit.provider }}</b></div>
+    </div>
+    {% endfor %}
+
+    <div>testlisting 3</div>
+    <div>testlisting 4</div>
+    <div>testlisting 5</div>
+    <div>testlisting 6</div>
+    <div>testlisting 7</div>
+    <div>testlisting 8</div>
+    <div>testlisting 9</div>
+    <div>testlisting 10</div>
+</div>
+
+{% endblock %}

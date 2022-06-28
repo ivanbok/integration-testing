@@ -1,0 +1,35 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+<h2>Redemption History</h2>
+
+    {% if redemptionHistory %}
+        <table style="margin-left: auto; margin-right: auto">
+            <tr style="background-color: #0418b3; color: white">
+                <th style="width: 100px; text-align: center">S/N</th>
+                <th style="width: 120px">Product</th>
+                <th style="width: 55%"> </th>
+                <th style="width: 100px; text-align: center">Quantity</th>
+                <th style="width: 150px; text-align: center">Date Redeemed</th>
+            </tr>
+            {% for redemptionItem in redemptionHistory %}
+                {% if redemptionItem.evenSN %}
+                    <tr style="background-color: #e3e9fc; color: black">
+                {% else %}
+                    <tr style="background-color: #f2f5ff; color: black;">
+                {% endif %}
+                    <td style="text-align: center">{{ redemptionItem.serialNumber }}</td>
+                    <td><b>{{ redemptionItem.title }}</b></td>
+                    <td>{{ redemptionItem.description }}</td>
+                    <td style="text-align: center">{{ redemptionItem.quantityRedeemed }}</td>
+                    <td style="text-align: center">{{ redemptionItem.redemptionDate }}</td>
+                    </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <div>You have not redeemed any items or services</div>
+    {% endif %}
+
+{% endblock %}

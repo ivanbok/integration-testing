@@ -1,0 +1,49 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+<h2>Order Confirmation</h2>
+
+<table style="margin-left: auto; margin-right: auto">
+    <tr style="background-color: #0418b3; color: white">
+        <th style="width: 100px; text-align: center">S/N</th>
+        <th style="width: 120px">Product</th>
+        <th style="width: 70%"> </th>
+        <th style="width: 100px; text-align: center">Points Paid</th>
+    </tr>
+    {% for cartItem in cart %}
+        {% if cartItem.evenSN %}
+            <tr style="background-color: #e3e9fc; color: black">
+        {% else %}
+            <tr style="background-color: #f2f5ff; color: black;">
+        {% endif %}
+        <td style="text-align: center">{{ cartItem.serialNumber }}</td>
+        <td><img src="{{ cartItem.imageurl }}" style="width:100px" alt="{{ cartItem.title }}"></td>
+        <td><b>{{ cartItem.title }}</b></td>
+        <td style="text-align: center">{{ cartItem.price }}</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td></td>
+        <td><b>Total Paid: </b></td>
+        <td style="text-align: center"><b>{{ total_cost }}</b></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td><b>Balance Points: </b></td>
+        <td style="text-align: center"><b>{{ availablePoints }}</b></td>
+        <td></td>
+    </tr>
+</table>
+<br><br>
+<div style="width: 100%; background-color: #f2f5ff;">
+    <b>Transaction References: </b><br>
+    {% for transactionID in transactionIDs %}
+        <span>{{ transactionID }}</span><br>
+    {% endfor %}
+</div>
+
+{% endblock %}

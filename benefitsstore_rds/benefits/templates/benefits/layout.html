@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}HR Benefits Store{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'benefits/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'benefits/bannerstyles.css' %}" rel="stylesheet">
+        {% block class %}
+        {% endblock %}
+        {% block script %}
+        {% endblock %}
+        <script>
+            window.onload = getBalance
+            function getBalance(){
+                fetch('/availablebalance')
+                .then(response => response.json())
+                .then(availablePoints => {
+                    console.log(availablePoints);
+                    document.querySelector('#balance').innerHTML = `<b>Available Points: </b>${availablePoints.availablePoints}`;
+                })
+            }
+        </script>
+    </head>
+    <body id="pagebody">
+        <div class="hero-image">
+            <div class="hero-text">
+              <h1>The Benefits Center</h1>
+              <p>Your benefits. Your choice.</p>
+            </div>
+          </div>
+          
+        <!--<h1>HR Benefits Store</h1>-->
+        <div>
+            {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+
+        <div id="balance" {% if not user.is_employee %} hidden {% endif %}></div>
+        
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'store' %}">Store</a>
+            </li>
+            {% if user.is_authenticated %}
+                {% if user.is_employee %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'viewbenefits' %}">My Benefits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart' %}">Cart</a>
+                    </li>
+                {% endif %}
+                {% if user.is_serviceprovider %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'addlisting' %}">Create Listing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'viewsales' %}">View my Listings</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+        <hr>
+        <form action="{% url 'search' %}" method="post" style="text-align: center">
+            {% csrf_token %}
+            <input type="text" name="searchquery" style="width: 90%;">
+            <input type="submit" class="btn btn-primary" value="Search">
+        </form>
+
+        <hr>
+        {% block body %}
+        {% endblock %}
+        <br><br><br>
+    </body>
+</html>

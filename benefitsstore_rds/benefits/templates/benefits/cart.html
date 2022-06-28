@@ -1,0 +1,110 @@
+{% extends "benefits/layout.html" %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        console.log('DOM fully loaded and parsed');
+        // document.querySelector('#quantity').value = 2;
+    });
+    document.addEventListener('DOMContentLoaded', getQuantity ());
+    function getQuantity(){
+                fetch('/cartquantity')
+                .then(response => response.json())
+                .then(cartquantity => {
+                    console.log(cartquantity);
+                    let i = 0
+                    document.querySelectorAll('#quantity').forEach(numberInput => {
+                        numberInput.value = cartquantity.itemQuantity[i];
+                        i++;
+                    });
+                    // quantityArray = cartquantity.itemQuantity;
+                    // pasteQuantity(quantityArray);
+                })
+            }
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+<h2>Cart</h2>
+
+    {% if cart %}
+        <table style="margin-left: auto; margin-right: auto">
+            <tr style="background-color: #0418b3; color: white">
+                <th style="width: 100px; text-align: center">S/N</th>
+                <th style="width: 120px">Product</th>
+                <th style="width: 55%"> </th>
+                <th style="width: 100px; text-align: center">Points Required</th>
+                <th style="width: 150px; text-align: center">Quantity</th>
+            </tr>
+            {% for cartItem in cart %}
+                {% if cartItem.is_active %}
+                    {% if cartItem.evenSN %}
+                        <tr style="background-color: #e3e9fc; color: black">
+                    {% else %}
+                        <tr style="background-color: #f2f5ff; color: black;">
+                    {% endif %}
+                    <td style="text-align: center">{{ cartItem.serialNumber }}</td>
+                    <td><img src="{{ cartItem.imageurl }}" style="width:100px" alt="{{ cartItem.title }}"></td>
+                    <td><b>{{ cartItem.title }}</b></td>
+                    <td style="text-align: center">{{ cartItem.price }}</td>
+                    <td style="text-align: center">
+                        <form action="{% url 'cart' %}" method="post">
+                            {% csrf_token %}
+                            <input type="number" id="quantity" name="quantity" data-id="{{ cartItem.id }}" placeholder="{{ cartItem.quantity }}" min="0" step="1" style="width: 3em;">
+                            <input type="hidden" id="itemID" name="itemID" value="{{ cartItem.id }}">
+                            <input class="btn btn-warning" type="submit" value="Update">
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td><b>Total: </b></td>
+                <td></td>
+                <td style="text-align: center"><b>{{ total_cost }}</b></td>
+                <td></td>
+            </tr>
+        </table>
+
+        {% if sufficientPoints %}
+            <div style="text-align: center">
+                <form action="{% url 'checkout' %}" method="post">
+                    {% csrf_token %}
+
+                    {% if contains_product %}
+                    <hr>
+                    <table style="margin-right:100px;margin-left:auto">
+                        <tr>
+                            <td style="text-align: left"><h4>Shipping</h3></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left">Address Line 1: </td>
+                            <td style="text-align: left"><input type="text" id="addressLineOne" name="addressLineOne" maxlength="40" size="40"><br></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left">Address Line 2 (optional): </td>
+                            <td style="text-align: left"><input type="text" id="addressLineTwo" name="addressLineTwo" maxlength="40" size="40"><br></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left">Postal Code:</td>
+                            <td style="text-align: left"><input type="text" id="postalcode" name="postalcode" maxlength="10" size="10"><br></td>
+                        </tr>
+                    </table>
+                    <hr>
+                    {% endif %}
+                    <div>You currently have <b>{{ availablePoints }}</b> points. After this purchase, you will have <b>{{remainingPoints}}</b> points left.</div><br>
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Submit Order">
+                </form>
+            </div>
+        {% else %}
+            <div style="text-align: center; font-size: 18px">You do not have sufficient points to make this order.</div>
+        {% endif %}
+    {% else %}
+    <div>Your Cart is Currently Empty</div>
+    {% endif %}
+
+{% endblock %}

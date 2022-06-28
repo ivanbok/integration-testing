@@ -1,0 +1,60 @@
+{% extends "benefits/layout.html" %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('#register-button').forEach(button => {
+            button.onclick = function() {
+                console.log(button.dataset.user);
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block class %}
+<style>
+    .registerbutton {
+        width: 25%;
+        display: inline-block;
+        border: 1px black;
+        padding: 20px;
+        background: #256bdb;
+        font-family: sans-serif;
+        font-size: 30px;
+        color: white;
+        text-align: center;
+    }
+
+    .registerbutton:hover {
+        width: 25%;
+        display: inline-block;
+        border: 1px black;
+        padding: 20px;
+        background: #5687d6;
+        font-family: sans-serif;
+        font-size: 30px;
+        color: white;
+        text-align: center;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+    <h2>I am a...</h2><br>
+    <div style="text-align:center">
+        <a href="{% url 'registeremployee' %}"><span class="registerbutton">Company<br> Employee</span></a>
+        <a href="{% url 'registerbusiness' %}"><span class="registerbutton">Business<br> Subscriber</span></a>
+        <a href="{% url 'registerprovider' %}"><span class="registerbutton">Service<br> Provider</span></a> 
+    </div>
+
+    <!--<button type="button" id="register-button" class="btn btn-outline-primary" data-user="Employee">Company Employee</button>
+    <button type="button" id="register-button" class="btn btn-outline-primary" data-user="Business">Business User/HR Staff</button>
+    <button type="button" id="register-button" class="btn btn-outline-primary" data-user="Provider">Service Provider</button>
+    -->
+    <br><br>
+    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+
+{% endblock %}

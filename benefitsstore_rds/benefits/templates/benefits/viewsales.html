@@ -1,0 +1,135 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+<h2>My Listings and Sales</h2>
+
+    {% if benefitList %}
+        <table style="margin-left: auto; margin-right: auto">
+            <tr style="background-color: #0418b3; color: white">
+                <th style="width: 100px; text-align: center">S/N</th>
+                <th style="width: 120px">Product</th>
+                <th style="width: 40%"> </th>
+                <th style="width: 100px; text-align: center">Price <br> (points)</th>
+                <th style="width: 100px; text-align: center">Number Sold</th>
+                <th style="width: 50px; text-align: center"></th>
+                <th style="width: 130px; text-align: right">Actions</th>
+                <th style="width: 130px; text-align: center"></th>
+            </tr>
+            {% for benefitItem in benefitList %}
+                    {% if benefitItem.evenSN %}
+                        <tr style="background-color: #e3e9fc; color: black">
+                    {% else %}
+                        <tr style="background-color: #f2f5ff; color: black;">
+                    {% endif %}
+                    <td style="text-align: center">{{ benefitItem.serialNumber }}</td>
+                    <td><a href="{% url 'viewlisting' benefitItem.id %}"><img src="{{ benefitItem.imageurl }}" style="width:100px" alt="{{ benefitItem.title }}"></a></td>
+                    <td><b><a href="{% url 'viewlisting' benefitItem.id %}">{{ benefitItem.title }}</a></b></td>
+                    <td style="text-align: center">{{ benefitItem.price }}</td>
+                    <td style="text-align: center">{{ benefitItem.numberPurchased }}</td>
+                    <td style="text-align: center">
+                        <form action="{% url 'viewsales' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" id="actionType" name="actionType" value="editlisting">
+                            <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                            <input class="btn btn-info" type="submit" value="Edit">
+                        </form>
+                    </td>
+                    <td style="text-align: center">
+                        <form action="{% url 'viewsales' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" id="actionType" name="actionType" value="resetSales">
+                            <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                            <input class="btn btn-warning" type="submit" value="Reset Sales">
+                        </form>
+                    </td>
+                    <td style="text-align: center">
+                        {% if benefitItem.is_active %}
+                            <form action="{% url 'viewsales' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" id="actionType" name="actionType" value="deactivate">
+                                <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                                <input class="btn btn-danger" type="submit" value="Make Inactive">
+                            </form>
+                        {% else %}
+                            <form action="{% url 'viewsales' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" id="actionType" name="actionType" value="activate">
+                                <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                                <input class="btn btn-success" type="submit" value="Make Active">
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <br><br> 
+
+    {% else %}
+    <div>You do not have any active listings. <br><br></div>
+    {% endif %}
+
+    {% if benefitListInactive %}
+    <h2>Inactive Listings</h2>
+    <table style="margin-left: auto; margin-right: auto">
+        <tr style="background-color: #5c5c5c; color: white">
+            <th style="width: 100px; text-align: center">S/N</th>
+            <th style="width: 120px">Product</th>
+            <th style="width: 40%"> </th>
+            <th style="width: 100px; text-align: center">Price <br> (points)</th>
+            <th style="width: 100px; text-align: center">Number Sold</th>
+            <th style="width: 50px; text-align: center"></th>
+            <th style="width: 130px; text-align: right">Actions</th>
+            <th style="width: 130px; text-align: center"></th>
+        </tr>
+        {% for benefitItem in benefitListInactive %}
+                {% if benefitItem.evenSN %}
+                    <tr style="background-color: #e3e3e3; color: black">
+                {% else %}
+                    <tr style="background-color: #f2f2f2; color: black;">
+                {% endif %}
+                <td style="text-align: center">{{ benefitItem.serialNumber }}</td>
+                <td><a href="{% url 'viewlisting' benefitItem.id %}"><img src="{{ benefitItem.imageurl }}" style="width:100px" alt="{{ benefitItem.title }}"></a></td>
+                <td><b><a href="{% url 'viewlisting' benefitItem.id %}">{{ benefitItem.title }}</a></b></td>
+                <td style="text-align: center">{{ benefitItem.price }}</td>
+                <td style="text-align: center">{{ benefitItem.numberPurchased }}</td>
+                <td style="text-align: center">
+                    <form action="{% url 'viewsales' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="actionType" name="actionType" value="editlisting">
+                        <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                        <input class="btn btn-info" type="submit" value="Edit">
+                    </form>
+                </td>
+                <td style="text-align: center">
+                    <form action="{% url 'viewsales' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="actionType" name="actionType" value="resetSales">
+                        <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                        <input class="btn btn-warning" type="submit" value="Reset Sales">
+                    </form>
+                </td>
+                <td style="text-align: center">
+                    {% if benefitItem.is_active %}
+                        <form action="{% url 'viewsales' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" id="actionType" name="actionType" value="deactivate">
+                            <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                            <input class="btn btn-danger" type="submit" value="Make Inactive">
+                        </form>
+                    {% else %}
+                        <form action="{% url 'viewsales' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" id="actionType" name="actionType" value="activate">
+                            <input type="hidden" id="benefitID" name="benefitID" value="{{ benefitItem.id }}">
+                            <input class="btn btn-success" type="submit" value="Make Active">
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+{% endblock %}

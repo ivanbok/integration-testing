@@ -1,0 +1,54 @@
+{% extends "benefits/layout.html" %}
+
+{% block body %}
+
+<h2>My Benefits</h2>
+
+{% if benefitList %}
+<table style="margin-left: auto; margin-right: auto">
+    <tr style="background-color: #0418b3; color: white">
+        <th style="width: 50px; text-align: center">S/N</th>
+        <th style="width: 120px">Product</th>
+        <th></th>
+        <th style="width: 50%">Description</th>
+        <th style="width: 100px; text-align: center">Quantity</th>
+        <th style="width: 50px; text-align: center">Redeem</th>
+        <th style="width: 50px; text-align: center"></th>
+    </tr>
+    {% for benefitItem in benefitList %}
+        {% if benefitItem.evenSN %}
+            <tr style="background-color: #e3e9fc; color: black">
+        {% else %}
+            <tr style="background-color: #f2f5ff; color: black;">
+        {% endif %}
+        <td style="text-align: center">{{ benefitItem.serialNumber }}</td>
+        <td><img src="{{ benefitItem.imageurl }}" style="width:100px" alt="{{ benefitItem.title }}"></td>
+        <td><b>{{ benefitItem.title }}</b></td>
+        <td>{{ benefitItem.description }}</td>
+        <td style="text-align: center">{{ benefitItem.quantity }}</td>
+        <td>
+            <form action="{% url 'redeemitems' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="redeemtype" name="redeemtype" value="single">
+                <input type="hidden" id="itemid" name="itemid" value="{{ benefitItem.id }}">
+                <input class="btn btn-info" type="submit" value="One">
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'redeemitems' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="redeemtype" name="redeemtype" value="all">
+                <input type="hidden" id="itemid" name="itemid" value="{{ benefitItem.id }}">
+                <input class="btn btn-success" type="submit" value="All">
+            </form>
+        </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<br><br>
+
+<a href="{% url 'redemptionhistory' %}" class="btn btn-secondary btn-lg btn-block" role="button" aria-pressed="true">View Redemption History</a>
+
+{% endblock %}

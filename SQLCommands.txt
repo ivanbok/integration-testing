@@ -1,0 +1,1 @@
+INSERT INTO Results (result_id, date_time, category, url, headline, summary) VALUES (1, '2022-07-07 12:34:56', 'security', 'https://www.securitynews.com/fakeurl1', 'All of Bitcoin just got Stolen', 'The quick brown fox jumps over the lazy dog');
